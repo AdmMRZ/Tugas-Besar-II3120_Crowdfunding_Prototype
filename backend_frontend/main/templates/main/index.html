@@ -3,56 +3,99 @@
 
 {% block content %}
 
-<style>
-    .fade-in-card { animation: fadeIn 0.5s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-</style>
+<div class="row justify-content-center mb-5 mt-4">
+    <div class="text-center py-5 mb-4">
+        <h1 class="display-4 fw-bold mb-3" style="letter-spacing: -0.02em; color: #0f172a;">
+            Fund Dreams, <span class="text-primary-custom">Share Kindness.</span>
+        </h1>
+        <p class="lead text-grey mb-5 mx-auto" style="max-width: 600px;">
+            Discover and support campaigns that matter to you. From medical needs to creative projects.
+        </p>
 
-<div class="row justify-content-center mb-5">
-    <div class="col-md-8 text-center">
-        <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden mb-4">
-            <span class="input-group-text bg-white border-0 ps-4">
-                <i class="bi bi-search text-muted"></i>
-            </span>
-            <input type="text" id="search-input" class="form-control border-0" placeholder="Search campaigns..." value="{{ request.GET.q|default:'' }}">
+        <div class="position-relative mx-auto" style="max-width: 600px;">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 ps-4" style="border-color: #cbd5e1;">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" id="search-input" class="form-control border-start-0 py-3" 
+                       placeholder="What do you want to support?" 
+                       style="border-color: #cbd5e1; box-shadow: none;"
+                       value="{{ request.GET.q|default:'' }}">
+                <button class="btn btn-custom-green px-4 fw-bold" type="button" onclick="fetchCampaigns()">
+                    Search
+                </button>
+            </div>
         </div>
+    </div>
+</div>
 
-        <div class="d-flex flex-wrap justify-content-center gap-2" id="category-container">
-            <button data-cat="" class="category-btn btn btn-sm rounded-pill px-3 fw-bold btn-custom-green {% if not selected_category %}active{% endif %}">
-                All Categories
-            </button>
-            
-            {% for code, name in categories %}
-            <button data-cat="{{ code }}" class="category-btn btn btn-sm rounded-pill px-3 fw-bold btn-custom-green {% if selected_category == code %}active{% endif %}">
-                {{ name }}
-            </button>
-            {% endfor %}
-        </div>
-        </div>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+    
+    <div class="d-flex flex-wrap justify-content-center gap-2" id="category-wrapper">
+        <button data-cat="" class="btn btn-outline-custom px-3 py-1 rounded-pill category-btn {% if not selected_category %}active-cat{% endif %}">
+            All
+        </button>
+        {% for code, name in categories %}
+        <button data-cat="{{ code }}" class="btn btn-outline-custom px-3 py-1 rounded-pill category-btn {% if selected_category == code %}active-cat{% endif %}">
+            {{ name }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex align-items-center">
+        <label class="text-muted small me-2 fw-bold">Sort by:</label>
+        <select id="sort-select" class="form-select form-select-sm border-0 bg-white shadow-sm fw-bold text-dark" style="width: auto; cursor: pointer;">
+            <option value="newest">Newest</option>
+            <option value="close_to_goal">Close to Goal</option>
+            <option value="oldest">Oldest</option>
+        </select>
+    </div>
 </div>
 
 <div id="campaign-container">
     {% include 'main/campaign_list.html' %}
 </div>
 
+<style>
+    .btn-outline-custom {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        color: #64748b; /* Abu-abu */
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-outline-custom:hover {
+        border-color: var(--primary-green);
+        color: var(--primary-green);
+        background: #f0fdf4;
+    }
+
+    .active-cat {
+        background-color: var(--primary-green) !important; /* Primary green */
+        color: white !important;
+        border-color: var(--primary-green) !important;
+        box-shadow: 0 4px 6px rgba(79, 140, 104, 0.2);
+    }
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-input');
     const categoryBtns = document.querySelectorAll('.category-btn');
+    const sortSelect = document.getElementById('sort-select');
     const container = document.getElementById('campaign-container');
     
     let currentCategory = '';
+    let currentSort = 'newest';
     let searchTimeout;
 
     function fetchCampaigns() {
         const query = searchInput.value;
-        const url = `{% url 'campaign_index' %}?q=${query}&category=${currentCategory}`;
+        const url = `{% url 'campaign_index' %}?q=${query}&category=${currentCategory}&sort=${currentSort}`;
 
-        container.style.opacity = '0.5';
-
-        fetch(url, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
+        container.style.opacity = '0.6';
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
         .then(response => response.text())
         .then(html => {
             container.innerHTML = html;
@@ -67,15 +110,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     categoryBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            categoryBtns.forEach(b => {
-                b.classList.remove('active'); 
-            });
-
-            this.classList.add('active');
-
+            categoryBtns.forEach(b => b.classList.remove('active-cat'));
+            
+            this.classList.add('active-cat');
+            
             currentCategory = this.getAttribute('data-cat');
             fetchCampaigns();
         });
+    });
+
+    sortSelect.addEventListener('change', function() {
+        currentSort = this.value;
+        fetchCampaigns();
     });
 });
 </script>

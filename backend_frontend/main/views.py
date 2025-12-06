@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q 
+from django.db.models import Q, F, FloatField, ExpressionWrapper
 from .models import Campaign, Donation, CATEGORY_CHOICES 
 from .forms import CampaignForm, DonationForm, RegisterForm, CampaignEditForm, UserUpdateForm
 from django.contrib.auth import login, logout, update_session_auth_hash
@@ -55,8 +55,8 @@ def campaign_detail(request, pk):
     })
     
 def campaign_index(request):
-    campaigns = Campaign.objects.filter(is_active=True).order_by('-created_at')
-    
+    campaigns = Campaign.objects.filter(is_active=True)
+
     query = request.GET.get('q')
     if query:
         campaigns = campaigns.filter(
@@ -69,16 +69,31 @@ def campaign_index(request):
     if category_filter:
         campaigns = campaigns.filter(category=category_filter)
 
-    context = {
-        'campaigns': campaigns,
-        'categories': CATEGORY_CHOICES,
-        'selected_category': category_filter
-    }
+    campaigns = campaigns.annotate(
+        percent=ExpressionWrapper(
+            F('current_amount') * 100.0 / F('target_amount'),
+            output_field=FloatField()
+        )
+    )
+
+    sort_by = request.GET.get('sort', 'newest') 
+    
+    if sort_by == 'close_to_goal':
+        campaigns = campaigns.order_by('-percent')
+    elif sort_by == 'oldest':
+        campaigns = campaigns.order_by('created_at')
+    else: 
+        campaigns = campaigns.order_by('-created_at')
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return render(request, 'main/campaign_list.html', context)
+        return render(request, 'main/campaign_list.html', {'campaigns': campaigns})
 
-    return render(request, 'main/index.html', context)
+    return render(request, 'main/index.html', {
+        'campaigns': campaigns,
+        'categories': CATEGORY_CHOICES,
+        'selected_category': category_filter,
+        'current_sort': sort_by 
+    })
 
 @login_required(login_url='/admin/')
 def create_campaign(request):

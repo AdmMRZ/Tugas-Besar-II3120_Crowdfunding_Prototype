@@ -2,49 +2,105 @@
 
 <div class="row g-4">
     {% for campaign in campaigns %}
-    <div class="col-md-4 fade-in-card"> 
-        <div class="card h-100 bg-white">
+    <div class="col-md-4 col-sm-6 fade-in-card"> 
+        <div class="card h-100 border-0 bg-white campaign-card">
             
-            <div style="height: 220px; overflow: hidden; background: #eee;">
+            <div class="position-relative overflow-hidden rounded-top-3" style="padding-top: 56.25%;">
                 {% if campaign.image_url %}
-                    <img src="{{ campaign.image_url }}" class="w-100 h-100 object-fit-cover" alt="...">
+                    <img src="{{ campaign.image_url }}" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover transition-img" alt="...">
                 {% else %}
-                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-light d-flex align-items-center justify-content-center text-muted">
                         <i class="bi bi-image fs-1"></i>
                     </div>
+                {% endif %}
+                
+                {% if campaign.progress_percentage >= 100 %}
+                    <span class="position-absolute top-0 end-0 m-3 badge shadow-sm px-3 py-2 rounded-pill fw-bold" 
+                          style="background-color: var(--primary-green); color: white; font-size: 0.75rem;">
+                        <i class="bi bi-check-circle-fill me-1"></i> Goal Reached
+                    </span>
+                {% else %}
+                    <span class="position-absolute top-0 end-0 m-3 badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-bold text-primary-custom" 
+                          style="font-size: 0.75rem;">
+                        {{ campaign.get_category_display }}
+                    </span>
                 {% endif %}
             </div>
 
             <div class="card-body p-4 d-flex flex-column">
                 
-                <span class="badge mb-2 align-self-start border" style="background-color:white; color: #4aaa58;">
-                    {{ campaign.get_category_display }}
-                </span>
-                
-                <h5 class="card-title fw-bold mb-1">{{ campaign.title|truncatechars:40 }}</h5>
-                <p class="text-muted small mb-3">by {{ campaign.creator.username }}</p>
-                <p class="card-text text-muted small flex-grow-1">{{ campaign.description|truncatewords:15 }}</p>
-                
-                <div class="mt-3">
-                    <div class="d-flex justify-content-between small fw-bold mb-1">
-                        <span class="text-primary-custom">{{ campaign.current_amount|rupiah }}</span>
-                        <span class="text-muted">{{ campaign.progress_percentage }}%</span>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <div class="avatar-mini rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; background: var(--light-green); font-size: 10px; font-weight: bold; color: var(--primary-green);">
+                        {{ campaign.creator.username|slice:":1"|upper }}
                     </div>
-                    
-                    <div class="progress" style="height: 8px; border-radius: 4px;">
-                        <div class="progress-bar progress-bar-custom" style="width: {{ campaign.progress_percentage }}%"></div>
+                    <small class="text-grey fw-semibold" style="font-size: 0.85rem;">{{ campaign.creator.username }}</small>
+                </div>
+
+                <h5 class="card-title fw-bold mb-2 text-dark" style="font-size: 1.1rem; line-height: 1.4;">
+                    {{ campaign.title|truncatechars:50 }}
+                </h5>
+                
+                <p class="card-text text-grey mb-4 flex-grow-1" style="font-size: 0.9rem; line-height: 1.6;">
+                    {{ campaign.description|truncatewords:12 }}
+                </p>
+                
+                    <div class="mt-auto">
+                    <div class="progress mb-2" style="height: 6px; border-radius: 10px; background-color: #f1f5f9;">
+                        <div class="progress-bar progress-bar-custom" role="progressbar" 
+                             style="width: {% if campaign.progress_percentage > 100 %}100{% else %}{{ campaign.progress_percentage }}{% endif %}%; border-radius: 10px;">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="fw-bold {% if campaign.progress_percentage >= 100 %}text-primary-custom{% else %}text-dark{% endif %}" style="font-size: 0.95rem;">
+                                {{ campaign.current_amount|rupiah }}
+                            </span>
+                            <span class="text-grey" style="font-size: 0.75rem;"> raised</span>
+                        </div>
+                        <div class="text-end">
+                            <span class="fw-bold text-dark" style="font-size: 0.95rem;">{{ campaign.progress_percentage }}%</span>
+                        </div>
                     </div>
                 </div>
                 
-                <a href="{% url 'campaign_detail' campaign.pk %}" 
-                   class="btn btn-custom-green mt-3 rounded-pill fw-bold stretched-link">View Details</a>
+                <a href="{% url 'campaign_detail' campaign.pk %}" class="stretched-link"></a>
             </div>
         </div>
     </div>
     {% empty %}
     <div class="col-12 text-center py-5">
-        <h4 class="mt-3">No campaigns found.</h4>
-        <p class="text-muted">Try adjusting your search.</p>
+        <div class="bg-white p-5 rounded-4 border border-dashed mx-auto" style="max-width: 500px;">
+            <i class="bi bi-search fs-1 text-grey mb-3 d-block"></i>
+            <h5 class="fw-bold">No campaigns found</h5>
+            <p class="text-grey">We couldn't find what you're looking for. Try adjusting your search keywords.</p>
+        </div>
     </div>
     {% endfor %}
 </div>
+
+
+<style>
+    .campaign-card {
+        border: 1px solid #f1f5f9 !important; /* Border super tipis */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 16px; /* Lebih rounded biar modern */
+    }
+    
+    .campaign-card:hover {
+        transform: translateY(-8px); /* Naik ke atas pas hover */
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+        border-color: transparent !important;
+    }
+
+    .transition-img {
+        transition: transform 0.5s ease;
+    }
+    .campaign-card:hover .transition-img {
+        transform: scale(1.05); /* Gambar zoom dikit pas hover */
+    }
+
+    .fade-in-card { animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>

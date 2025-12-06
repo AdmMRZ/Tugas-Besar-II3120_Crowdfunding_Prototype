@@ -5,8 +5,7 @@
 <div class="row">
     <div class="col-lg-4 mb-4">
         
-        <div class="card border-0 shadow-sm rounded-4 mb-4 text-white overflow-hidden position-relative" 
-             style="background: linear-gradient(45deg, #bae584, #4f8c68);">
+        <div class="card border-0 shadow-sm rounded-4 mb-4 text-white overflow-hidden position-relative bg-primary-gradient">
             
             <div class="card-body p-4 position-relative z-1">
                 <div class="d-flex align-items-center mb-3">
@@ -81,7 +80,7 @@
 
         <div class="row g-3 mb-4">
             <div class="col-6">
-                <div class="p-3 bg-white rounded-3 shadow-sm border-start border-4" style="border-color: #4f8c68 !important;">
+                <div class="p-3 bg-white rounded-3 shadow-sm border-start border-4" style="border-color: var(--primary-green) !important;">
                     <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Total Campaigns</small>
                     <div class="fs-3 fw-bold">{{ campaigns.count }}</div>
                 </div>
@@ -96,50 +95,7 @@
 
         <div class="d-flex flex-column gap-3">
             {% for campaign in campaigns %}
-            <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-3"> 
-                <div class="row g-0">
-                    <div class="col-md-3 bg-light position-relative">
-                        {% if campaign.image_url %}
-                            <img src="{{ campaign.image_url }}" class="w-100 h-100 object-fit-cover" style="min-height: 120px;">
-                        {% else %}
-                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">No Image</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="col-md-9">
-                        <div class="card-body py-3">
-                            
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="fw-bold mb-1">
-                                        <a href="{% url 'campaign_detail' campaign.pk %}" class="text-decoration-none text-dark">{{ campaign.title }}</a>
-                                    </h6>
-                                    <span class="badge bg-light text-dark border">{{ campaign.created_at|date:"d M Y" }}</span>
-                                </div>
-
-                                {% if campaign.is_active %}
-                                    <a href="{% url 'edit_campaign' campaign.pk %}" class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill px-3">
-                                        <i class="bi bi-pencil-square"></i> Edit
-                                    </a>
-                                {% else %}
-                                    <span class="badge bg-secondary">Closed</span>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="mt-2">
-                                <p class="small text-muted mb-1">Target: {{ campaign.target_amount|rupiah }}</p>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar progress-bar-custom" style="width: {{ campaign.progress_percentage }}%"></div>
-                                </div>
-                                <small class="text-primary-custom fw-bold" style="font-size: 0.75rem;">
-                                    Collected: {{ campaign.current_amount|rupiah }}
-                                </small>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+                {% include 'main/_campaign_card_list.html' with campaign=campaign %}
             {% endfor %}
         </div>
     </div>

@@ -14,7 +14,7 @@
             --primary-green: #4f8c68;
             --light-green: #bae584;
             --text-green: #4aaa58;
-            --bg-color: rgba(185, 229, 132, 0.219);
+            --bg-color: #f1f5f9;
         }
         
         body {
@@ -35,6 +35,11 @@
         
         .progress-bar-custom {
             background: linear-gradient(45deg, var(--light-green), var(--primary-green));
+        }
+
+        .bg-primary-gradient {
+            background: linear-gradient(45deg, var(--light-green), var(--primary-green));
+            color: white;
         }
 
         .btn-custom-green {
@@ -91,11 +96,10 @@
     </style>
 </head>
 <body>
-
     <nav class="navbar navbar-expand-lg fixed-top py-3">
         <div class="container">
             <a class="navbar-brand" href="{% url 'campaign_index' %}">
-                <img src="{% static '/logo.png' %}" alt="Logo" height="30" class="d-inline-block align-text-top me-2">CROWDFUND
+                <img src="{% static 'logo.png' %}" alt="Logo" height="30" class="d-inline-block align-text-top me-2">CROWDFUND
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
