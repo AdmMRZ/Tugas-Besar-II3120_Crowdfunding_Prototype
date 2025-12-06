@@ -10,7 +10,7 @@ class CampaignForm(forms.ModelForm):
         widgets = {
             'deadline': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
-            'category': forms.Select(attrs={'class': 'form-select bg-light'}),
+            'category': forms.Select(attrs={'class': 'form-select bg-light'}), 
         }
 
 class CampaignEditForm(forms.ModelForm):

@@ -66,11 +66,16 @@ def campaign_index(request):
     if category_filter:
         campaigns = campaigns.filter(category=category_filter)
 
-    return render(request, 'main/index.html', {
+    context = {
         'campaigns': campaigns,
         'categories': CATEGORY_CHOICES,
         'selected_category': category_filter
-    })
+    }
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'main/campaign_list.html', context)
+
+    return render(request, 'main/index.html', context)
 
 @login_required(login_url='/admin/')
 def create_campaign(request):

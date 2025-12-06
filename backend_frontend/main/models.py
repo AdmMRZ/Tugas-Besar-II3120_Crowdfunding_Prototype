@@ -10,13 +10,12 @@ CATEGORY_CHOICES = [
     ('HUMANITY', 'Humanity'),
     ('ANIMAL', 'Animal Welfare'),
     ('RELIGIOUS', 'Religious'),
-    ('OTHER', 'Other'),
 ]
 
 class Campaign(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='OTHER')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='')
     description = models.TextField()
     target_amount = models.IntegerField()
     current_amount = models.IntegerField(default=0)
