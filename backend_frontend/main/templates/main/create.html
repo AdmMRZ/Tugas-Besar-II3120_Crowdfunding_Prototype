@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
+                <h3 class="fw-bold-title text-primary-custom">Initiate a Campaign</h3>
+                <p class="text-muted">Provide your campaign details below</p>
+            </div>
+            
+            <div class="card-body p-4 p-md-5">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase text-muted">{{ field.label }}</label>
+                        
+                        {% if field.errors %}
+                            <div class="alert alert-danger py-1 px-2 small mb-1">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+
+                        <div class="input-group">
+                            {% if field.name == 'target_amount' %}
+                                <span class="input-group-text bg-light border-end-0 fw-bold">Rp</span>
+                            {% endif %}
+                            
+                            <input 
+                                type="{{ field.field.widget.input_type }}" 
+                                name="{{ field.name }}" 
+                                id="{{ field.id_for_label }}"
+                                class="form-control bg-light border-0 py-2 {% if field.name == 'target_amount' %}border-start-0{% endif %}"
+                                {% if field.value %}value="{{ field.value }}"{% endif %}
+                                {% if field.field.required %}required{% endif %}
+                            >
+                        </div>
+                        
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        
+                            {% if field.name == 'image_url' %}
+                            <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">
+                                *Tip: Paste an image link from Google/Unsplash (ending with .jpg/.png)
+                            </small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2 mt-5">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Launch Campaign
+                        </button>
+                        <a href="{% url 'campaign_index' %}" class="btn btn-outline-secondary rounded-pill fw-bold border-0">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

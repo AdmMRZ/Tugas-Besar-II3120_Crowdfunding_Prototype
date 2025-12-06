@@ -1,0 +1,99 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 pe-lg-5">
+        {% if campaign.image_url %}
+            <img src="{{ campaign.image_url }}" class="w-100 rounded-4 shadow-sm mb-4" alt="Campaign Image">
+        {% endif %}
+
+        <h1 class="fw-bold-title display-6 mb-3">{{ campaign.title }}</h1>
+        <div class="d-flex align-items-center mb-4">
+            <div class="avatar-circle fs-5" style="width:40px; height:40px;">{{ campaign.creator.username|slice:":1" }}</div>
+            <div>
+                <span class="d-block small text-muted">Created by</span>
+                <span class="fw-bold">{{ campaign.creator.username }}</span>
+            </div>
+            <span class="mx-3 text-muted">•</span>
+            <span class="text-muted small">{{ campaign.created_at|date:"d M Y" }}</span>
+        </div>
+
+        <hr class="my-4 text-muted opacity-25">
+
+        <h5 class="fw-bold mb-3">Fundraising Story</h5>
+        <div class="text-muted lh-lg" style="white-space: pre-line;">
+            {{ campaign.description }}
+        </div>
+
+        <div class="mt-5 pt-4">
+            <h5 class="fw-bold mb-4">Donors ({{ donations.count }})</h5>
+            <div class="list-group list-group-flush">
+                {% for donation in donations %}
+                <div class="list-group-item bg-transparent px-0 py-3 d-flex align-items-start">
+                    <div class="avatar-circle bg-light text-muted" style="width:40px; height:40px;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="ms-3">
+                        <div class="fw-bold">{{ donation.donor.username|default:"Anonymous Supporter" }}</div>
+                        <div class="small text-success fw-bold">Donated Rp {{ donation.amount }}</div>
+                        {% if donation.message %}
+                        <div class="p-2 bg-white border rounded mt-2 small text-muted fst-italic">
+                            "{{ donation.message }}"
+                        </div>
+                        {% endif %}
+                    </div>
+                    <small class="ms-auto text-muted">{{ donation.donated_at|timesince }} lalu</small>
+                </div>
+                {% empty %}
+                <p class="text-muted">Be the first donor!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow border-0 sticky-top" style="top: 120px; z-index: 10;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-baseline mb-1">
+                    <h3 class="fw-bold text-success mb-0">Rp {{ campaign.current_amount }}</h3>
+                </div>
+                <p class="text-muted small">raised of the target <strong>Rp {{ campaign.target_amount }}</strong></p>
+                
+                <div class="progress mb-2" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: {{ campaign.progress_percentage }}%"></div>
+                </div>
+                <p class="small text-end fw-bold text-muted">{{ campaign.progress_percentage }}%</p>
+
+                <hr class="my-4">
+
+                {% if user.is_authenticated %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <label class="form-label fw-bold small text-uppercase text-muted">Enter Amount</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-light border-end-0 fw-bold text-muted">Rp</span>
+                            <input type="number" name="amount" class="form-control border-start-0 py-2 fw-bold" placeholder="0" min="1000" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <textarea name="message" class="form-control bg-light" placeholder="Write a message or note..." rows="2"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm">
+                            Donate Now
+                        </button>
+                        <div class="text-center mt-3 small text-muted">
+                            <i class="bi bi-wallet2"></i> Your Balance: <strong>Rp {{ user.userprofile.balance }}</strong>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="text-center py-4 bg-light rounded">
+                        <p class="mb-3">Log in to begin supporting.</p>
+                        <a href="{% url 'login_user' %}" class="btn btn-primary w-100">Log In</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

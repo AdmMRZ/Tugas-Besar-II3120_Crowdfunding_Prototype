@@ -1,0 +1,83 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card bg-primary text-white border-0 shadow-lg rounded-4 overflow-hidden position-relative">
+            <div class="card-body p-5 position-relative z-1">
+                <h2 class="fw-bold-title">Creator Dashboard</h2>
+                <p class="opacity-75 mb-4">Manage the campaigns you have created here.</p>
+                
+                <div class="d-flex gap-5">
+                    <div>
+                        <small class="text-uppercase opacity-75 fw-bold" style="font-size: 0.7rem;">Total Campaigns</small>
+                        <div class="fs-2 fw-bold">{{ campaigns.count }}</div>
+                    </div>
+                    <div>
+                        <small class="text-uppercase opacity-75 fw-bold" style="font-size: 0.7rem;">Total Funds Raised</small>
+                        <div class="fs-2 fw-bold">Rp {{ total_raised }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="position-absolute bg-white opacity-10 rounded-circle" style="width: 300px; height: 300px; top: -100px; right: -50px;"></div>
+        </div>
+    </div>
+</div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold-title text-muted">My Campaigns</h4>
+    <a href="{% url 'create_campaign' %}" class="btn btn-outline-primary rounded-pill fw-bold">
+        <i class="bi bi-plus-lg"></i> Create New
+    </a>
+</div>
+
+<div class="d-flex flex-column gap-3">
+    {% for campaign in campaigns %}
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-md-2 bg-light">
+                {% if campaign.image_url %}
+                    <img src="{{ campaign.image_url }}" class="w-100 h-100 object-fit-cover" style="min-height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                        <i class="bi bi-image fs-3"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-10">
+                <div class="card-body h-100 d-flex flex-column justify-content-center">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title fw-bold mb-1">
+                                <a href="{% url 'campaign_detail' campaign.pk %}" class="text-decoration-none text-dark stretched-link">
+                                    {{ campaign.title }}
+                                </a>
+                            </h5>
+                            <p class="text-muted small mb-2">Created: {{ campaign.created_at|date:"d M Y" }}</p>
+                        </div>
+                        <span class="badge bg-light text-primary border">Active</span>
+                    </div>
+
+                    <div class="mt-2">
+                        <div class="d-flex justify-content-between small fw-bold mb-1">
+                            <span>Collected: Rp {{ campaign.current_amount }}</span>
+                            <span class="text-muted">Target: Rp {{ campaign.target_amount }}</span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ campaign.progress_percentage }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-5 bg-white rounded-4 shadow-sm border border-dashed">
+        <h4 class="text-muted">You do not have any campaigns yet.</h4>
+        <p class="text-muted mb-4">Begin your first initiative today.</p>
+        <a href="{% url 'create_campaign' %}" class="btn btn-primary rounded-pill px-4">Create Your First Campaign</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
