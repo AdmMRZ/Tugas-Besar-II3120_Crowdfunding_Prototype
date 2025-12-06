@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-%m54(qa_c6r$8x#h11ru2e0c6*ngh^w9e#h=5_z^)aisw1^gcd
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app', 'https://*.up.railway.app']
 
 
 # Application definition
