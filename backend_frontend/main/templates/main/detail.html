@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load rupiah_filters %} <span>{{ campaign.current_amount|rupiah }}</span> <span>Target: {{ campaign.target_amount|rupiah }}</span>
 
 {% block content %}
 <div class="row">

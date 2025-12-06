@@ -3,15 +3,27 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+CATEGORY_CHOICES = [
+    ('MEDICAL', 'Medical & Health'),
+    ('EDUCATION', 'Education'),
+    ('DISASTER', 'Disaster Relief'),
+    ('HUMANITY', 'Humanity'),
+    ('ANIMAL', 'Animal Welfare'),
+    ('RELIGIOUS', 'Religious'),
+    ('OTHER', 'Other'),
+]
+
 class Campaign(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='OTHER')
     description = models.TextField()
     target_amount = models.IntegerField()
     current_amount = models.IntegerField(default=0)
     deadline = models.DateTimeField()
     image_url = models.CharField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

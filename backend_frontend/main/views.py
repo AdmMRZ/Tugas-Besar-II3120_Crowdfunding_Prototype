@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.db.models import Q 
+from .models import Campaign, Donation, CATEGORY_CHOICES 
+from .forms import CampaignForm, DonationForm, RegisterForm, CampaignEditForm, UserUpdateForm
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-from .models import Campaign, Donation
-from .forms import CampaignForm, DonationForm, RegisterForm, UserUpdateForm
 
 def campaign_index(request):
     campaigns = Campaign.objects.all().order_by('-created_at')
@@ -49,6 +50,27 @@ def campaign_detail(request, pk):
         'donations': donations,
         'form': form
     })
+    
+def campaign_index(request):
+    campaigns = Campaign.objects.filter(is_active=True).order_by('-created_at')
+    
+    query = request.GET.get('q')
+    if query:
+        campaigns = campaigns.filter(
+            Q(title__icontains=query) | 
+            Q(description__icontains=query) |
+            Q(creator__username__icontains=query)
+        )
+
+    category_filter = request.GET.get('category')
+    if category_filter:
+        campaigns = campaigns.filter(category=category_filter)
+
+    return render(request, 'main/index.html', {
+        'campaigns': campaigns,
+        'categories': CATEGORY_CHOICES,
+        'selected_category': category_filter
+    })
 
 @login_required(login_url='/admin/')
 def create_campaign(request):
@@ -62,6 +84,31 @@ def create_campaign(request):
     else:
         form = CampaignForm()
     return render(request, 'main/create.html', {'form': form})
+
+@login_required
+def edit_campaign(request, pk):
+    campaign = get_object_or_404(Campaign, pk=pk)
+
+    if campaign.creator != request.user:
+        messages.error(request, "Lu bukan pemilik campaign ini!")
+        return redirect('campaign_index')
+
+    if request.method == 'POST':
+        if 'btn_end_campaign' in request.POST:
+            campaign.is_active = False
+            campaign.save()
+            messages.success(request, 'Campaign berhasil ditutup (Ended).')
+            return redirect('profile_dashboard')
+
+        form = CampaignEditForm(request.POST, instance=campaign)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Campaign berhasil diupdate!')
+            return redirect('profile_dashboard')
+    else:
+        form = CampaignEditForm(instance=campaign)
+
+    return render(request, 'main/edit_campaign.html', {'form': form, 'campaign': campaign})
 
 def register_user(request):
     if request.method == 'POST':
