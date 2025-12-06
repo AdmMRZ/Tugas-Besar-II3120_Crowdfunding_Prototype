@@ -1,1 +1,1 @@
-gunicorn --chdir backend_frontend crowdfunding_prototype.wsgi
+web: gunicorn --chdir backend_frontend crowdfunding_prototype.wsgi
