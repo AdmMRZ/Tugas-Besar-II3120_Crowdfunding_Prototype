@@ -1,5 +1,5 @@
 {% extends 'main/base.html' %}
-{% load rupiah_filters %} <span>{{ campaign.current_amount|rupiah }}</span> <span>Target: {{ campaign.target_amount|rupiah }}</span>
+{% load rupiah_filters %}
 
 {% block content %}
 <div class="row">
@@ -43,7 +43,7 @@
                         </div>
                         {% endif %}
                     </div>
-                    <small class="ms-auto text-muted">{{ donation.donated_at|timesince }} lalu</small>
+                    <small class="ms-auto text-muted">{{ donation.donated_at|timesince }} ago</small>
                 </div>
                 {% empty %}
                 <p class="text-muted">Be the first donor!</p>
@@ -55,13 +55,14 @@
     <div class="col-lg-4">
         <div class="card shadow border-0 sticky-top" style="top: 120px; z-index: 10;">
             <div class="card-body p-4">
+                
                 <div class="d-flex align-items-baseline mb-1">
                     <h3 class="fw-bold text-success mb-0">{{ campaign.current_amount|rupiah }}</h3>
                 </div>
                 <p class="text-muted small">raised of the target <strong>{{ campaign.target_amount|rupiah }}</strong></p>
                 
                 <div class="progress mb-2" style="height: 8px;">
-                    <div class="progress-bar bg-success" style="width: {{ campaign.progress_percentage }}%"></div>
+                    <div class="progress-bar progress-bar-custom" style="width: {{ campaign.progress_percentage }}%"></div>
                 </div>
                 <p class="small text-end fw-bold text-muted">{{ campaign.progress_percentage }}%</p>
 
@@ -80,17 +81,18 @@
                             <textarea name="message" class="form-control bg-light" placeholder="Write a message or note..." rows="2"></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm">
+                        <button type="submit" class="btn btn-custom-green w-100 py-3 rounded-3 fw-bold fs-5 shadow-sm">
                             Donate Now
                         </button>
+                        
                         <div class="text-center mt-3 small text-muted">
-                            <i class="bi bi-wallet2"></i> Your Balance: <strong>Rp {{ user.userprofile.balance }}</strong>
+                            <i class="bi bi-wallet2"></i> Your Balance: <strong>{{ user.userprofile.balance|rupiah }}</strong>
                         </div>
                     </form>
                 {% else %}
                     <div class="text-center py-4 bg-light rounded">
                         <p class="mb-3">Log in to begin supporting.</p>
-                        <a href="{% url 'login_user' %}" class="btn btn-primary w-100">Log In</a>
+                        <a href="{% url 'login_user' %}" class="btn btn-custom-green w-100">Log In</a>
                     </div>
                 {% endif %}
             </div>

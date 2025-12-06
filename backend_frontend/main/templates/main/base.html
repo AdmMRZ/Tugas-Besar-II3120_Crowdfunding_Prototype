@@ -11,24 +11,57 @@
 
     <style>
         :root {
-            --primary-color: #4f8c68; /* Indigo Modern */
-            --secondary-color: rgb(186, 229, 132); /* Emerald Green */
-            --bg-color: #f3f4f6;
+            --primary-green: #4f8c68;
+            --light-green: #bae584;
+            --text-green: #4aaa58;
+            --bg-color: rgba(185, 229, 132, 0.219);
         }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: rgba(185, 229, 132, 0.219);
+            background-color: var(--bg-color);
             color: #1f2937;
         }
-        /* Navbar Glassmorphism */
+
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid #d1fae5;
         }
-        .navbar-brand { font-weight: 800; color: var(--primary-color) !important; letter-spacing: -0.5px; }
         
-        /* Cards */
+        .navbar-brand { font-weight: 800; color: var(--primary-green) !important; letter-spacing: -0.5px; }
+        
+        .text-primary-custom { color: var(--primary-green) !important; }
+        
+        .progress-bar-custom {
+            background: linear-gradient(45deg, var(--light-green), var(--primary-green));
+        }
+
+        .btn-custom-green {
+            background-color: var(--primary-green); /* Warna #4f8c68 */
+            color: white;
+            border: 1px solid var(--primary-green); 
+            transition: all 0.2s ease-in-out; 
+            font-weight: 600;
+        }
+        
+        .btn-custom-green:hover, 
+        .btn-custom-green.active { 
+            /* Pas di-hover jadi agak gelap dikit biar kerasa "kepencet" */
+            background-color: #3e7052; 
+            border-color: #3e7052;
+            color: white;
+            /* Tambahin shadow dikit biar manis */
+            box-shadow: 0 4px 12px rgba(79, 140, 104, 0.3); 
+        }
+        .avatar-circle { 
+            width: 32px; height: 32px; 
+            background: #ecfdf5; 
+            color: var(--primary-green); 
+            display: inline-flex; align-items: center; justify-content: center; 
+            border-radius: 50%; font-weight: bold; 
+        }
+
         .card {
             border: none;
             border-radius: 12px;
@@ -40,34 +73,20 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        
-        /* Buttons */
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-            padding: 10px 24px;
-            font-weight: 600;
-            border-radius: 8px;
-        }
-        .btn-success {
-            background-color: var(--secondary-color);
-            border: none;
-            font-weight: 600;
+
+        .accordion-button:not(.collapsed) {
+            color: var(--primary-green);
+            background-color: #ecfdf5;
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
         }
         
-        /* Utilities */
-        .text-primary-custom { color: var(--primary-color); }
-        .fw-bold-title { font-weight: 700; letter-spacing: -0.02em; }
-        .avatar-circle { 
-            width: 32px; 
-            height: 32px; 
-            background: #e0e7ff; 
-            color: var(--primary-color); 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 50%; 
-            font-weight: bold; 
+        .accordion-button:focus {
+            border-color: var(--light-green);
+            box-shadow: 0 0 0 0.25rem rgba(79, 140, 104, 0.25); 
+        }
+
+        .accordion-button:not(.collapsed)::after {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%234f8c68'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
         }
     </style>
 </head>
@@ -88,7 +107,7 @@
                     
                     {% if user.is_authenticated %}
                         <li class="nav-item me-3">
-                            <a class="btn btn-outline-primary btn-sm rounded-pill fw-bold px-3" href="{% url 'create_campaign' %}">
+                            <a class="btn btn-custom-green btn-sm rounded-pill px-3" href="{% url 'create_campaign' %}">
                                 <i class="bi bi-plus-lg"></i> Start Campaign
                             </a>
                         </li>
@@ -104,7 +123,7 @@
 
                     {% else %}
                         <li class="nav-item"><a class="nav-link fw-bold" href="{% url 'login_user' %}">Log In</a></li>
-                        <li class="nav-item ms-2"><a class="btn btn-primary rounded-pill" href="{% url 'register_user' %}">Register</a></li>
+                        <li class="nav-item ms-2"><a class="btn btn-custom-green rounded-pill" href="{% url 'register_user' %}">Register</a></li>
                     {% endif %}
                     
                 </ul>

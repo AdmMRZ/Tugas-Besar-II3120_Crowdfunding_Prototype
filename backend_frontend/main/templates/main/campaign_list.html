@@ -1,22 +1,10 @@
 {% load rupiah_filters %}
-<style>
-    .btn-custom-green {
-        background-color: white;
-        color: #4aaa58;
-        border: 2px solid #4aaa58; 
-        transition: all 0.3s ease-in-out; 
-    }
-    .btn-custom-green:hover {
-        background: linear-gradient(45deg, #bae584,#4f8c68); 
-        color: white;
-        border-color: transparent;
-        background-origin: border-box;
-    }
-</style>
 
 <div class="row g-4">
     {% for campaign in campaigns %}
-    <div class="col-md-4 fade-in-card"> <div class="card h-100 bg-white">
+    <div class="col-md-4 fade-in-card"> 
+        <div class="card h-100 bg-white">
+            
             <div style="height: 220px; overflow: hidden; background: #eee;">
                 {% if campaign.image_url %}
                     <img src="{{ campaign.image_url }}" class="w-100 h-100 object-fit-cover" alt="...">
@@ -28,9 +16,11 @@
             </div>
 
             <div class="card-body p-4 d-flex flex-column">
+                
                 <span class="badge mb-2 align-self-start border" style="background-color:white; color: #4aaa58;">
                     {{ campaign.get_category_display }}
                 </span>
+                
                 <h5 class="card-title fw-bold mb-1">{{ campaign.title|truncatechars:40 }}</h5>
                 <p class="text-muted small mb-3">by {{ campaign.creator.username }}</p>
                 <p class="card-text text-muted small flex-grow-1">{{ campaign.description|truncatewords:15 }}</p>
@@ -40,12 +30,14 @@
                         <span class="text-primary-custom">{{ campaign.current_amount|rupiah }}</span>
                         <span class="text-muted">{{ campaign.progress_percentage }}%</span>
                     </div>
+                    
                     <div class="progress" style="height: 8px; border-radius: 4px;">
-                        <div class="progress-bar" style=" background: linear-gradient(45deg, #bae584,#4f8c68); width: {{ campaign.progress_percentage }}%"></div>
+                        <div class="progress-bar progress-bar-custom" style="width: {{ campaign.progress_percentage }}%"></div>
                     </div>
                 </div>
+                
                 <a href="{% url 'campaign_detail' campaign.pk %}" 
-                class="btn btn-custom-green mt-3 rounded-pill fw-bold stretched-link">View Details</a>
+                   class="btn btn-custom-green mt-3 rounded-pill fw-bold stretched-link">View Details</a>
             </div>
         </div>
     </div>

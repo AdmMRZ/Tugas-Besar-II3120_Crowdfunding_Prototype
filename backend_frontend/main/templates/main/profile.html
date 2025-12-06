@@ -1,14 +1,16 @@
 {% extends 'main/base.html' %}
-{% load rupiah_filters %} <span>{{ campaign.current_amount|rupiah }}</span> <span>Target: {{ campaign.target_amount|rupiah }}</span>
+{% load rupiah_filters %}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-4 mb-4">
         
-        <div class="card border-0 shadow-sm rounded-4 mb-4 bg-primary text-white overflow-hidden position-relative">
+        <div class="card border-0 shadow-sm rounded-4 mb-4 text-white overflow-hidden position-relative" 
+             style="background: linear-gradient(45deg, #bae584, #4f8c68);">
+            
             <div class="card-body p-4 position-relative z-1">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="avatar-circle bg-white text-primary fs-4 me-3" style="width: 50px; height: 50px;">
+                    <div class="avatar-circle bg-white text-primary-custom fs-4 me-3" style="width: 50px; height: 50px;">
                         {{ user.username|slice:":1"|upper }}
                     </div>
                     <div>
@@ -28,7 +30,7 @@
                 
                 <div class="accordion-item border-0">
                     <h2 class="accordion-header">
-                        <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfile">
+                        <button class="accordion-button fw-bold text-primary-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfile">
                             <i class="bi bi-person-gear me-2"></i> Edit Profile
                         </button>
                     </h2>
@@ -37,7 +39,7 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 {{ p_form.as_p }}
-                                <button type="submit" name="btn_update_profile" class="btn btn-primary w-100 btn-sm rounded-pill fw-bold">Save Changes</button>
+                                <button type="submit" name="btn_update_profile" class="btn btn-custom-green w-100 btn-sm rounded-pill fw-bold">Save Changes</button>
                             </form>
                         </div>
                     </div>
@@ -72,14 +74,14 @@
     <div class="col-lg-8">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="fw-bold-title text-muted mb-0">My Campaigns</h4>
-            <a href="{% url 'create_campaign' %}" class="btn btn-primary rounded-pill fw-bold shadow-sm">
+            <a href="{% url 'create_campaign' %}" class="btn btn-custom-green rounded-pill fw-bold shadow-sm">
                 <i class="bi bi-plus-lg"></i> Create New
             </a>
         </div>
 
         <div class="row g-3 mb-4">
             <div class="col-6">
-                <div class="p-3 bg-white rounded-3 shadow-sm border-start border-4 border-primary">
+                <div class="p-3 bg-white rounded-3 shadow-sm border-start border-4" style="border-color: #4f8c68 !important;">
                     <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Total Campaigns</small>
                     <div class="fs-3 fw-bold">{{ campaigns.count }}</div>
                 </div>
@@ -94,7 +96,8 @@
 
         <div class="d-flex flex-column gap-3">
             {% for campaign in campaigns %}
-            <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-3"> <div class="row g-0">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-3"> 
+                <div class="row g-0">
                     <div class="col-md-3 bg-light position-relative">
                         {% if campaign.image_url %}
                             <img src="{{ campaign.image_url }}" class="w-100 h-100 object-fit-cover" style="min-height: 120px;">
@@ -126,9 +129,9 @@
                             <div class="mt-2">
                                 <p class="small text-muted mb-1">Target: {{ campaign.target_amount|rupiah }}</p>
                                 <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar bg-success" style="width: {{ campaign.progress_percentage }}%"></div>
+                                    <div class="progress-bar progress-bar-custom" style="width: {{ campaign.progress_percentage }}%"></div>
                                 </div>
-                                <small class="text-success fw-bold" style="font-size: 0.75rem;">
+                                <small class="text-primary-custom fw-bold" style="font-size: 0.75rem;">
                                     Collected: {{ campaign.current_amount|rupiah }}
                                 </small>
                             </div>

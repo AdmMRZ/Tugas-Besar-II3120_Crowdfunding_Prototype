@@ -10,28 +10,25 @@
 
 <div class="row justify-content-center mb-5">
     <div class="col-md-8 text-center">
-        
         <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden mb-4">
             <span class="input-group-text bg-white border-0 ps-4">
                 <i class="bi bi-search text-muted"></i>
             </span>
-            <input type="text" id="search-input" class="form-control border-0" 
-                   placeholder="Search campaigns instantly..." 
-                   value="{{ request.GET.q|default:'' }}">
+            <input type="text" id="search-input" class="form-control border-0" placeholder="Search campaigns..." value="{{ request.GET.q|default:'' }}">
         </div>
 
         <div class="d-flex flex-wrap justify-content-center gap-2" id="category-container">
-            <button data-cat="" class="category-btn btn btn-sm rounded-pill px-3 fw-bold btn-dark text-white">
+            <button data-cat="" class="category-btn btn btn-sm rounded-pill px-3 fw-bold btn-custom-green {% if not selected_category %}active{% endif %}">
                 All Categories
             </button>
             
             {% for code, name in categories %}
-            <button data-cat="{{ code }}" class="category-btn btn btn-sm rounded-pill px-3 fw-bold btn-light text-dark border">
+            <button data-cat="{{ code }}" class="category-btn btn btn-sm rounded-pill px-3 fw-bold btn-custom-green {% if selected_category == code %}active{% endif %}">
                 {{ name }}
             </button>
             {% endfor %}
         </div>
-    </div>
+        </div>
 </div>
 
 <div id="campaign-container">
@@ -71,11 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
     categoryBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             categoryBtns.forEach(b => {
-                b.classList.remove('btn-dark', 'text-white');
-                b.classList.add('btn-light', 'text-dark');
+                b.classList.remove('active'); 
             });
-            this.classList.remove('btn-light', 'text-dark');
-            this.classList.add('btn-dark', 'text-white');
+
+            this.classList.add('active');
 
             currentCategory = this.getAttribute('data-cat');
             fetchCampaigns();
