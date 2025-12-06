@@ -7,13 +7,24 @@ class CampaignForm(forms.ModelForm):
     class Meta:
         model = Campaign
         fields = ['title', 'category', 'description', 'target_amount', 'deadline', 'image_url']
-        
         widgets = {
             'deadline': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
-            'category': forms.Select(attrs={'class': 'form-select bg-light'}), 
+            'category': forms.Select(), 
         }
 
+    def __init__(self, *args, **kwargs):
+        super(CampaignForm, self).__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            css_class = 'form-control bg-light border-0 py-2'
+            
+            if name == 'category':
+                css_class = 'form-select bg-light border-0 py-2'
+            field.widget.attrs.update({'class': css_class})
+            
+            if name == 'target_amount':
+                 field.widget.attrs.update({'class': 'form-control bg-light border-0 py-2 border-start-0'})
+                 
 class CampaignEditForm(forms.ModelForm):
     class Meta:
         model = Campaign
@@ -21,9 +32,22 @@ class CampaignEditForm(forms.ModelForm):
         widgets = {
             'deadline': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
-            'title': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control-plaintext fw-bold'}),
-            'category': forms.Select(attrs={'class': 'form-select bg-light'}),
+            'category': forms.Select(), 
+            'title': forms.TextInput(attrs={'readonly': 'readonly'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(CampaignEditForm, self).__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            css_class = 'form-control bg-light border-0 py-2'
+            
+            if name == 'category':
+                css_class = 'form-select bg-light border-0 py-2'
+            
+            if name == 'title':
+                css_class = 'form-control-plaintext fw-bold fs-5 px-0'
+
+            field.widget.attrs.update({'class': css_class})
 
 class DonationForm(forms.ModelForm):
     class Meta:

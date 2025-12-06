@@ -4,7 +4,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
+            <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
                 <h3 class="fw-bold-title text-primary-custom">Initiate a Campaign</h3>
                 <p class="text-muted">Provide your campaign details below</p>
             </div>
@@ -23,26 +23,19 @@
                             </div>
                         {% endif %}
 
-                        <div class="input-group">
-                            {% if field.name == 'target_amount' %}
-                                <span class="input-group-text bg-light border-end-0 fw-bold">Rp</span>
-                            {% endif %}
-                            
-                            <input 
-                                type="{{ field.field.widget.input_type }}" 
-                                name="{{ field.name }}" 
-                                id="{{ field.id_for_label }}"
-                                class="form-control bg-light border-0 py-2 {% if field.name == 'target_amount' %}border-start-0{% endif %}"
-                                {% if field.value %}value="{{ field.value }}"{% endif %}
-                                {% if field.field.required %}required{% endif %}
-                            >
-                        </div>
+                        {% if field.name == 'target_amount' %}
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0 fw-bold">Rp</span>
+                                {{ field }} </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
                         
                         {% if field.help_text %}
                             <small class="form-text text-muted">{{ field.help_text }}</small>
                         {% endif %}
                         
-                            {% if field.name == 'image_url' %}
+                        {% if field.name == 'image_url' %}
                             <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">
                                 *Tip: Paste an image link from Google/Unsplash (ending with .jpg/.png)
                             </small>

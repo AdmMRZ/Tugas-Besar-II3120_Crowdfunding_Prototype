@@ -36,7 +36,7 @@
                     </div>
                     <div class="ms-3">
                         <div class="fw-bold">{{ donation.donor.username|default:"Anonymous Supporter" }}</div>
-                        <div class="small text-success fw-bold">Donated Rp {{ donation.amount }}</div>
+                        <div class="small text-success fw-bold">Donated {{ donation.amount|rupiah }}</div>
                         {% if donation.message %}
                         <div class="p-2 bg-white border rounded mt-2 small text-muted fst-italic">
                             "{{ donation.message }}"
@@ -56,9 +56,9 @@
         <div class="card shadow border-0 sticky-top" style="top: 120px; z-index: 10;">
             <div class="card-body p-4">
                 <div class="d-flex align-items-baseline mb-1">
-                    <h3 class="fw-bold text-success mb-0">Rp {{ campaign.current_amount }}</h3>
+                    <h3 class="fw-bold text-success mb-0">{{ campaign.current_amount|rupiah }}</h3>
                 </div>
-                <p class="text-muted small">raised of the target <strong>Rp {{ campaign.target_amount }}</strong></p>
+                <p class="text-muted small">raised of the target <strong>{{ campaign.target_amount|rupiah }}</strong></p>
                 
                 <div class="progress mb-2" style="height: 8px;">
                     <div class="progress-bar bg-success" style="width: {{ campaign.progress_percentage }}%"></div>

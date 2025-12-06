@@ -95,20 +95,20 @@ def edit_campaign(request, pk):
     campaign = get_object_or_404(Campaign, pk=pk)
 
     if campaign.creator != request.user:
-        messages.error(request, "Lu bukan pemilik campaign ini!")
+        messages.error(request, "You are not the owner of this campaign.")
         return redirect('campaign_index')
 
     if request.method == 'POST':
         if 'btn_end_campaign' in request.POST:
             campaign.is_active = False
             campaign.save()
-            messages.success(request, 'Campaign berhasil ditutup (Ended).')
+            messages.success(request, 'Campaign has been successfully closed.')
             return redirect('profile_dashboard')
 
         form = CampaignEditForm(request.POST, instance=campaign)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Campaign berhasil diupdate!')
+            messages.success(request, 'Campaign updated successfully.')
             return redirect('profile_dashboard')
     else:
         form = CampaignEditForm(instance=campaign)

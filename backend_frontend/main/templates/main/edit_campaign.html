@@ -11,38 +11,40 @@
                 <form method="POST">
                     {% csrf_token %}
                     
+                    {% for field in form %}
                     <div class="mb-3">
-                        <label class="small text-muted fw-bold">JUDUL CAMPAIGN (Tidak bisa diubah)</label>
-                        {{ form.title }} 
-                    </div>
+                        <label class="small text-muted fw-bold text-uppercase">{{ field.label }}</label>
 
-                    <div class="mb-3">
-                        <label class="small text-muted fw-bold">Link Gambar</label>
-                        {{ form.image_url }}
-                    </div>
+                        {% if field.errors %}
+                            <div class="alert alert-danger py-1 px-2 small mb-1">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
 
-                    <div class="mb-3">
-                        <label class="small text-muted fw-bold">Batas Waktu</label>
-                        {{ form.deadline }}
+                        {{ field }}
+                        
+                        {% if field.name == 'title' %}
+                            <small class="text-muted d-block" style="font-size: 0.7rem;">
+                                *Campaign title cannot be changed.
+                            </small>
+                        {% endif %}
                     </div>
+                    {% endfor %}
 
-                    <div class="mb-4">
-                        <label class="small text-muted fw-bold">Cerita / Deskripsi</label>
-                        {{ form.description }}
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary fw-bold rounded-pill">
-                            Simpan Perubahan
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary fw-bold rounded-pill py-2">
+                            Save Changes
                         </button>
                         
-                        <hr>
+                        <hr class="my-2">
                         
-                        <button type="submit" name="btn_end_campaign" class="btn btn-danger fw-bold rounded-pill" onclick="return confirm('Yakin mau menutup campaign ini? Data tidak akan tampil lagi di halaman utama.')">
-                            <i class="bi bi-x-circle me-2"></i> End Campaign (Tutup Donasi)
+                        <button type="submit" name="btn_end_campaign" class="btn btn-danger fw-bold rounded-pill py-2" onclick="return confirm('Are you sure you want to end this campaign? It will be hidden from the public list.')">
+                            <i class="bi bi-x-circle me-2"></i> End Campaign (Stop Donation)
                         </button>
 
-                        <a href="{% url 'profile_dashboard' %}" class="btn btn-link text-muted text-decoration-none">Batal</a>
+                        <a href="{% url 'profile_dashboard' %}" class="btn btn-link text-muted text-decoration-none text-center">
+                            Cancel
+                        </a>
                     </div>
                 </form>
             </div>

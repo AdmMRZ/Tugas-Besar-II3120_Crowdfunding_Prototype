@@ -5,6 +5,13 @@ register = template.Library()
 @register.filter(name='rupiah')
 def rupiah(value):
     try:
-        return f"Rp {int(value):,}".replace(",", ".")
+        val = float(value)
+        
+        formatted = "{:,.2f}".format(val)
+        
+        formatted = formatted.replace(",", "TEMP").replace(".", ",").replace("TEMP", ".")
+        
+        return f"Rp{formatted}"
+        
     except (ValueError, TypeError):
-        return value
+        return "Rp0,00"
