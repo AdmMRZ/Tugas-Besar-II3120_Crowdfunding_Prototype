@@ -37,7 +37,10 @@ def campaign_detail(request, pk):
                 campaign.current_amount += amount
                 campaign.save()
                 
-                messages.success(request, f'Success! Donation of Rp {amount} has been completed. Remaining balance: Rp {user_wallet.balance}.')
+                fmt_amount = f"{amount:,.0f}".replace(",", ".")
+                fmt_balance = f"{user_wallet.balance:,.0f}".replace(",", ".")
+
+                messages.success(request, f'Success! Donation of Rp {fmt_amount} has been completed. Remaining balance: Rp {fmt_balance}.')
                 return redirect('campaign_detail', pk=pk)
             else:
                 messages.error(request, 'Insufficient balance. Please request an account top-up from an administrator.')
