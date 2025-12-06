@@ -99,7 +99,7 @@
                         {% if campaign.image_url %}
                             <img src="{{ campaign.image_url }}" class="w-100 h-100 object-fit-cover" style="min-height: 120px;">
                         {% else %}
-                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">No Img</div>
+                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">No Image</div>
                         {% endif %}
                     </div>
 
@@ -129,7 +129,7 @@
                                     <div class="progress-bar bg-success" style="width: {{ campaign.progress_percentage }}%"></div>
                                 </div>
                                 <small class="text-success fw-bold" style="font-size: 0.75rem;">
-                                    Terkumpul: {{ campaign.current_amount|rupiah }}
+                                    Collected: {{ campaign.current_amount|rupiah }}
                                 </small>
                             </div>
 
