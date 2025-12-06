@@ -15,7 +15,7 @@ CATEGORY_CHOICES = [
 class Campaign(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='MEDICAL')
     description = models.TextField()
     target_amount = models.IntegerField()
     current_amount = models.IntegerField(default=0)

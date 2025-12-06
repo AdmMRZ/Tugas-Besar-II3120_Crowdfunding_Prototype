@@ -7,6 +7,7 @@ class CampaignForm(forms.ModelForm):
     class Meta:
         model = Campaign
         fields = ['title', 'category', 'description', 'target_amount', 'deadline', 'image_url']
+        
         widgets = {
             'deadline': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 3}),
