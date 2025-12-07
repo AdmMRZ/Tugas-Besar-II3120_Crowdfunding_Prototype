@@ -33,14 +33,25 @@ class Campaign(models.Model):
         return 0
 
 class Donation(models.Model):
-    campaign = models.ForeignKey(Campaign, related_name='donations', on_delete=models.CASCADE)
-    donor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('SUCCESS', 'Success'),
+        ('FAILED', 'Failed'),
+        ('FLAGGED', 'Flagged as Fraud'),
+    ]
+
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name='donations')
+    donor = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.IntegerField()
     message = models.TextField(blank=True, null=True)
     donated_at = models.DateTimeField(auto_now_add=True)
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    risk_score = models.IntegerField(default=0)
+    risk_reason = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Donasi {self.amount} ke {self.campaign.title}"
+        return f"{self.donor.username} - {self.amount} [{self.status}]"
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
