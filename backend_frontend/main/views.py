@@ -33,7 +33,7 @@ def campaign_index(request):
     sort_by = request.GET.get('sort', 'newest') 
     
     if sort_by == 'close_to_goal':
-        campaigns = campaigns.order_by('-percent')
+        campaigns = campaigns.filter(percent__lt=100).order_by('-percent')
     elif sort_by == 'oldest':
         campaigns = campaigns.order_by('created_at')
     else: 
